@@ -1,6 +1,7 @@
 plugins {
 	id 'fabric-loom' version '0.12-SNAPSHOT'
 	id 'maven-publish'
+	id "com.matthewprenger.cursegradle" version "1.4.0"
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -99,3 +100,29 @@ loom {
 	}
 }
 assemble.dependsOn runDatagen
+
+curseforge {
+	if(!System.getenv().containsKey("apikey")){
+		System.out.println("Could not upload, api key not found")
+		return
+	} else {
+		apiKey = System.getenv("apikey")
+		project {
+			id = '661202'
+			changelog = "init"
+			releaseType = 'release'
+			addGameVersion '1.19'
+
+			mainArtifact(remapJar) {
+				displayName = "WildMod Truly Unbreakable: $project.version"
+			}
+			afterEvaluate {
+				tasks.curseforge.dependsOn remapJar
+			}
+
+		}
+		options {
+			forgeGradleIntegration = false
+		}
+	}
+}

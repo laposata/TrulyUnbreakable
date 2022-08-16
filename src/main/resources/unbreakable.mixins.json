@@ -9,9 +9,6 @@
   "mixins": [
     "EnchantmentHelperMixin",
     "ItemStackMixin",
-    "PlayerEntityMixin",
-    "tools.AxeItemMixin",
-    "tools.HoeItemMixin",
-    "tools.ShovelItemMixin"
+    "PlayerEntityMixin"
   ]
 }

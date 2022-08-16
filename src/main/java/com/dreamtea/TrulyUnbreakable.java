@@ -4,7 +4,6 @@ import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.dreamtea.effect.IndestructibleEffect.registerCallback;
 import static com.dreamtea.tag.IndestructibleTag.addDamageHookToAllItems;
 
 public class TrulyUnbreakable implements ModInitializer {
@@ -20,7 +19,6 @@ public class TrulyUnbreakable implements ModInitializer {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
-		registerCallback();
 		LOGGER.info("Hello Fabric world!");
 		addDamageHookToAllItems();
 	}

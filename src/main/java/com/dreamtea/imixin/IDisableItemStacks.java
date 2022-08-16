@@ -5,9 +5,6 @@ import net.minecraft.item.ItemStack;
 public interface IDisableItemStacks {
 
   String BROKEN_IDENTIFIER = "Broken";
-
-  void disable();
-  void enable();
   boolean isDisabled();
   boolean getBroken();
   void breakItem();
@@ -20,15 +17,4 @@ public interface IDisableItemStacks {
     return false;
   }
 
-  static void disable(ItemStack stack){
-    if(((Object)stack) instanceof IDisableItemStacks breakable){
-      breakable.disable();
-    }
-  }
-
-  static void enable(ItemStack stack){
-    if(((Object)stack) instanceof IDisableItemStacks breakable){
-      breakable.enable();
-    }
-  }
 }

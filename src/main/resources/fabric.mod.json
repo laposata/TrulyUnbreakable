@@ -14,7 +14,7 @@
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/modid/DreamTea.png",
+  "icon": "assets/TrulyUnbreakable/DreamTea.png",
 
   "environment": "*",
   "entrypoints": {

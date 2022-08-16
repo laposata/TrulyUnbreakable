@@ -2,17 +2,27 @@ package com.dreamtea.mixin;
 
 import com.dreamtea.effect.IndestructibleEffect;
 import com.dreamtea.imixin.IDisableItemStacks;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
+import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.MendingEnchantment;
 import net.minecraft.enchantment.VanishingCurseEnchantment;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryEntry;
@@ -39,23 +49,6 @@ public abstract class ItemStackMixin implements IDisableItemStacks {
 
   @Shadow public abstract boolean itemMatches(RegistryEntry<Item> itemEntry);
 
-  private boolean disabled = false;
-
-  @Override
-  public void disable() {
-    this.disabled = true;
-  }
-
-  @Override
-  public void enable() {
-    this.disabled = false;
-  }
-
-  @Override
-  public boolean isDisabled() {
-    return this.disabled;
-  }
-
   @Override
   public boolean getBroken(){
      return this.nbt != null && this.nbt.getBoolean(BROKEN_IDENTIFIER);
@@ -73,10 +66,24 @@ public abstract class ItemStackMixin implements IDisableItemStacks {
     setBroken(false);
   }
 
-  @Inject(method ="getItem", at=@At("RETURN"), cancellable = true)
-  public void getItem(CallbackInfoReturnable<Item> cir){
-    if(this.isDisabled()){
-      cir.setReturnValue(Items.AIR);
+  @Inject(method = "useOnBlock", at = @At("HEAD"), cancellable = true)
+  public void useOnBlock(ItemUsageContext context, CallbackInfoReturnable<ActionResult> cir){
+    if(this.getBroken()){
+      cir.setReturnValue(ActionResult.PASS);
+    }
+  }
+
+  @Inject(method = "useOnEntity", at = @At("HEAD"), cancellable = true)
+  public void useOnEntity(PlayerEntity user, LivingEntity entity, Hand hand, CallbackInfoReturnable<ActionResult> cir){
+    if(this.getBroken()){
+      cir.setReturnValue(ActionResult.PASS);
+    }
+  }
+
+  @Inject(method = "getAttributeModifiers", at = @At("HEAD"), cancellable = true)
+  public void getAttributeModifiers(EquipmentSlot slot, CallbackInfoReturnable<Multimap<EntityAttribute, EntityAttributeModifier>> cir) {
+    if(this.getBroken()){
+      cir.setReturnValue(ImmutableMultimap.of());
     }
   }
 
@@ -84,6 +91,13 @@ public abstract class ItemStackMixin implements IDisableItemStacks {
   public void onRepair(int damage, CallbackInfo ci){
     if(this.getBroken() && damage < this.getDamage()){
       this.repair();
+    }
+  }
+
+  @Inject(method = "getMiningSpeedMultiplier", at = @At("HEAD"), cancellable = true)
+  public void notFasterWhenBroken(BlockState state, CallbackInfoReturnable<Float> cir){
+    if(this.getBroken()){
+      cir.setReturnValue(1.0f);
     }
   }
 
@@ -110,13 +124,11 @@ public abstract class ItemStackMixin implements IDisableItemStacks {
     }
   }
 
-  @Redirect(method ="getTooltip", at=@At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0))
-  public boolean addBrokenToTooltip(List instance, Object e){
-    instance.add(e);
-    if(this.getBroken()) {
-      instance.add(Text.of("BROKEN").copy().formatted(Formatting.RED, Formatting.BOLD));
+  @Inject(method = "isSuitableFor", at = @At("HEAD"), cancellable = true)
+  public void isSuitableFor(BlockState state, CallbackInfoReturnable<Boolean> cir) {
+    if(this.getBroken()){
+      cir.setReturnValue(false);
     }
-    return true;
   }
 
   @Inject(method = "getDamage", at = @At("RETURN"))
@@ -137,4 +149,20 @@ public abstract class ItemStackMixin implements IDisableItemStacks {
   public void dontBreak(int amount, Random random, ServerPlayerEntity player, CallbackInfoReturnable<Boolean> cir){
     cir.setReturnValue(cir.getReturnValue() && !IndestructibleEffect.isIndestructible((ItemStack)(Object)this));
   }
+
+  @Redirect(method ="getTooltip", at=@At(value= "INVOKE", target = "Lnet/minecraft/item/ItemStack;getEnchantments()Lnet/minecraft/nbt/NbtList;"))
+  private NbtList stillCollectEnchantsWhenBroken(ItemStack instance){
+    NbtCompound nbt = instance.getNbt();
+    return nbt != null ? nbt.getList("Enchantments", 10) : new NbtList();
+  }
+
+  @Redirect(method ="getTooltip", at=@At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0))
+  public boolean addBrokenToTooltip(List instance, Object e){
+    instance.add(e);
+    if(this.getBroken()) {
+      instance.add(Text.of("BROKEN").copy().formatted(Formatting.RED, Formatting.BOLD));
+    }
+    return true;
+  }
+
 }
