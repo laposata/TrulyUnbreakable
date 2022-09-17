@@ -21,7 +21,7 @@ public class IndestructibleTag extends FabricTagProvider.ItemTagProvider {
   public static final List<Item> indestructibleDefaults = List.of(
     Items.NETHERITE_AXE, Items.NETHERITE_HOE, Items.NETHERITE_PICKAXE,
     Items.NETHERITE_SHOVEL, Items.NETHERITE_SWORD, Items.NETHERITE_CHESTPLATE,
-    Items.NETHERITE_HELMET, Items.NETHERITE_LEGGINGS, Items.NETHERITE_BOOTS, Items.BLACK_DYE, Items.DIRT, Items.SNOWBALL);
+    Items.NETHERITE_HELMET, Items.NETHERITE_LEGGINGS, Items.NETHERITE_BOOTS);
 
   public IndestructibleTag(FabricDataGenerator dataGenerator) {
     super(dataGenerator);

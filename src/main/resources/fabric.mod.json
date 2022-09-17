@@ -3,14 +3,13 @@
   "id": "truly-unbreakable",
   "version": "${version}",
 
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "Truly Unbreakable",
+  "description": "This makes Netherite gear unbreakable similar to Tridents and Elytras",
   "authors": [
-    "Me!"
+    "ToxxicGlitter"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "sources": "https://github.com/laposata/TrulyUnbreakable"
   },
 
   "license": "CC0-1.0",
@@ -32,7 +31,7 @@
   "depends": {
     "fabricloader": ">=0.14.6",
     "fabric": "*",
-    "minecraft": "~1.19",
+    "minecraft": "~1.19.2",
     "java": ">=17"
   },
   "suggests": {

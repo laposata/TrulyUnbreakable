@@ -9,6 +9,7 @@
   "mixins": [
     "EnchantmentHelperMixin",
     "ItemStackMixin",
-    "PlayerEntityMixin"
+    "PlayerEntityMixin",
+    "material.ArmorMaterialMixin"
   ]
 }

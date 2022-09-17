@@ -49,6 +49,8 @@ public abstract class ItemStackMixin implements IDisableItemStacks {
 
   @Shadow public abstract boolean itemMatches(RegistryEntry<Item> itemEntry);
 
+  float durabilityScaled;
+
   @Override
   public boolean getBroken(){
      return this.nbt != null && this.nbt.getBoolean(BROKEN_IDENTIFIER);
