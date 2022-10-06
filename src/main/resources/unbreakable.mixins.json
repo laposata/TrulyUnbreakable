@@ -10,6 +10,7 @@
     "EnchantmentHelperMixin",
     "ItemStackMixin",
     "PlayerEntityMixin",
-    "material.ArmorMaterialMixin"
+    "material.ArmorMaterialMixin",
+    "material.ToolMaterialsMixin"
   ]
 }

@@ -109,12 +109,14 @@ curseforge {
 		apiKey = System.getenv("apikey")
 		project {
 			id = '661202'
-			changelog = "init"
+			changelog = "Adding easier way to add future addons"
 			releaseType = 'release'
-			addGameVersion '1.19'
-
+			addGameVersion '1.19.2'
 			mainArtifact(remapJar) {
 				displayName = "WildMod Truly Unbreakable: $project.version"
+				relations {
+					requiredDependency 'fabric-api'
+				}
 			}
 			afterEvaluate {
 				tasks.curseforge.dependsOn remapJar

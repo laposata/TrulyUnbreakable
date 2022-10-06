@@ -13,7 +13,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
@@ -25,8 +24,6 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryEntry;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -44,12 +41,6 @@ public abstract class ItemStackMixin implements IDisableItemStacks {
   @Shadow public abstract NbtCompound getOrCreateNbt();
 
   @Shadow public abstract int getDamage();
-
-  @Shadow @Final private Item item;
-
-  @Shadow public abstract boolean itemMatches(RegistryEntry<Item> itemEntry);
-
-  float durabilityScaled;
 
   @Override
   public boolean getBroken(){
