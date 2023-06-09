@@ -2,17 +2,24 @@ package com.dreamtea.tag;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tag.TagKey;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryEntryLookup;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntryList;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+
+import java.util.Optional;
 
 public class TagUtils {
     public static boolean itemIsIn(ItemStack item, TagKey<Item> key){
-        return Registry.ITEM.getOrCreateEntry(Registry.ITEM.getKey(item.getItem()).get()).isIn(key);
+        Optional<RegistryEntryList.Named<Item>> entryList = Registries.ITEM.getEntryList(key);
+        if(entryList.isEmpty()) return false;
+        return entryList.get().contains(item.getRegistryEntry());
     }
 
     public static TagKey<Item> createItemTag(Identifier tag){
-        return TagKey.of(Registry.ITEM_KEY,tag);
+        return TagKey.of(RegistryKeys.ITEM, tag);
     }
 
 

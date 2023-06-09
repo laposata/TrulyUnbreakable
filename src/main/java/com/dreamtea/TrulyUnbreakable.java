@@ -16,6 +16,7 @@ public class TrulyUnbreakable implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		LOGGER.info("Unbreaking the game");
 		addDamageHookToAllItems();
 	}
 }

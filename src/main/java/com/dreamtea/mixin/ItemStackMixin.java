@@ -17,13 +17,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.util.registry.Registry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -101,7 +101,7 @@ public abstract class ItemStackMixin implements IDisableItemStacks {
       NbtList enchantments = cir.getReturnValue();
       for(int i = 0; i < enchantments.size(); i ++){
         NbtCompound nbtCompound = enchantments.getCompound(i);
-        Registry.ENCHANTMENT.getOrEmpty(EnchantmentHelper.getIdFromNbt(nbtCompound))
+        Registries.ENCHANTMENT.getOrEmpty(EnchantmentHelper.getIdFromNbt(nbtCompound))
           .ifPresent((e) -> {
             if(e instanceof MendingEnchantment
               || e instanceof VanishingCurseEnchantment)

@@ -1,6 +1,5 @@
 package com.dreamtea.mixin.material;
 
-import com.dreamtea.imixin.IHaveOriginalDurability;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ToolMaterials;
 import org.spongepowered.asm.mixin.Final;
@@ -11,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ToolMaterials.class)
-public class ToolMaterialsMixin implements IHaveOriginalDurability {
+public class ToolMaterialsMixin{
 
   @Shadow @Final public static ToolMaterials NETHERITE;
 
@@ -22,10 +21,5 @@ public class ToolMaterialsMixin implements IHaveOriginalDurability {
     if(this.equals(NETHERITE)){
       cir.setReturnValue(DIAMOND.getDurability());
     }
-  }
-
-  @Override
-  public int getOriginalDurability(EquipmentSlot slot) {
-    return ((ToolMaterials)(Object)this).getDurability();
   }
 }

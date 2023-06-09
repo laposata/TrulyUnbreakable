@@ -2,6 +2,9 @@ package com.dreamtea.effect;
 
 import com.dreamtea.imixin.IDisableItemStacks;
 import com.dreamtea.tag.TagUtils;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
+import net.minecraft.enchantment.UnbreakingEnchantment;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 
@@ -22,6 +25,15 @@ public class IndestructibleEffect {
   public static int doNotBreak(ItemStack stack, int amount, LivingEntity entity, Consumer<LivingEntity> breakCallback) {
     if(!isIndestructible(stack)){
       return amount;
+    }
+    int i = EnchantmentHelper.getLevel(Enchantments.UNBREAKING, stack);
+    int reduced = 0;
+    for (int k = 0; i > 0 && k < amount; ++k) {
+      if (!UnbreakingEnchantment.shouldPreventDamage(stack, i, entity.getRandom())) continue;
+      ++reduced;
+    }
+    if ((amount -= reduced) <= 0) {
+      return 0;
     }
     stack.setDamage(Math.min(stack.getMaxDamage(), stack.getDamage() + amount));
     if(isNotUsable(stack) && !getBroken(stack)){
